@@ -3,9 +3,14 @@ pragma experimental ABIEncoderV2;
 
 
 //Truffle Imports
-import "chainlink/contracts/ChainlinkClient.sol";
-import "chainlink/contracts/vendor/Ownable.sol";
-import "chainlink/contracts/interfaces/LinkTokenInterface.sol";
+//import "chainlink/contracts/ChainlinkClient.sol";
+//import "chainlink/contracts/vendor/Ownable.sol";
+//import "chainlink/contracts/interfaces/LinkTokenInterface.sol";
+
+//Remix imports
+import "https://github.com/smartcontractkit/chainlink/evm/contracts/ChainlinkClient.sol";
+import "https://github.com/smartcontractkit/chainlink/evm/contracts/vendor/Ownable.sol";
+import "https://github.com/smartcontractkit/LinkToken/contracts/LinkToken.sol";
 
 
 contract InsuranceProvider {
@@ -35,7 +40,7 @@ contract InsuranceProvider {
         _;
     }
     
-    event contractCreated(address _insurer, uint _premium, uint _totalCover);
+    event contractCreated(address _insuranceContract, uint _premium, uint _totalCover);
     
     //create a new contract for client, automatically approved and deployed to the blockchain
     function newContract(address _client, uint _duration, uint _premium, uint _totalCover, string _cropLocation) public payable returns(address) {
@@ -54,6 +59,7 @@ contract InsuranceProvider {
         //now that contract has been created, we need to fund it with enough LINK tokens to fulfil 1 Oracle request per day
         LinkTokenInterface link = LinkTokenInterface(i.getChainlinkToken());
         link.transfer(address(i), (_duration.div(DAY_IN_SECONDS)) * 1 ether);
+        
         
         return address(i);
         
@@ -94,10 +100,8 @@ contract Insurance is ChainlinkClient, Ownable  {
     using SafeMath_Chainlink for uint;
     
     uint public constant DAY_IN_SECONDS = 60; //How many seconds in a day. 60 for testing, 86400 for Production
-    uint public constant DROUGHT_DAYS_THRESDHOLD = 10;  //Number of consecutive days without rainfall to be defined as a drought
+    uint public constant DROUGHT_DAYS_THRESDHOLD = 5;  //Number of consecutive days without rainfall to be defined as a drought
     //uint public constant DROUGHT_RAINFALL_THRESDHOLD = 3;  //3 days above the temp is the trigger for contract conditions to be reached
-    string constant OPEN_WEATHER_URL = "https://openweathermap.org/data/2.5/weather?";
-    string constant OPEN_WEATHER_KEY = "b6907d289e10d714a6e88b30761fae22";
     uint256 private oraclePaymentAmount;
     string private jobId;
 
@@ -155,7 +159,7 @@ contract Insurance is ChainlinkClient, Ownable  {
     event contractCreated(address _insurer, address _client, uint _duration, uint _premium, uint _totalCover);
     event contractPaidOut(uint _paidTime, uint _totalPaid, uint _finalRainfall);
     event contractEnded(uint _endTime, uint _totalReturned);
-    event ranfallThresholdReached(uint _rainfall);
+    event ranfallThresholdReset(uint _rainfall);
     event dataRequestSent(bytes32 requestId);
     event dataReceived(uint _rainfall);
 
@@ -243,7 +247,7 @@ contract Insurance is ChainlinkClient, Ownable  {
         } else {
             //there was rain today, so reset daysWithoutRain parameter 
             daysWithoutRain = 0;
-            emit ranfallThresholdReached(currentRainfall);
+            emit ranfallThresholdReset(currentRainfall);
         }
         
         if (daysWithoutRain >= DROUGHT_DAYS_THRESDHOLD) {  // day threshold has been met
