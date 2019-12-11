@@ -20,7 +20,7 @@ contract InsuranceProvider {
 
     uint public constant DAY_IN_SECONDS = 60; //How many seconds in a day. 60 for testing, 86400 for Production
     
-    uint256 constant private ORACLE_PAYMENT = 0.1 * 1 ether;
+    uint256 constant private ORACLE_PAYMENT = 0.11 * 1 ether;
     address public constant LINK_ROPSTEN = 0x20fE562d797A42Dcb3399062AE9546cd06f63280; //address of LINK token on Ropsten
     address public constant ORACLE_CONTRACT = 0x4a3fbbb385b5efeb4bc84a25aaadcd644bd09721;
     string public constant JOB_ID = '6e34d8df2b864393a1f6b7e38917706b';
@@ -49,7 +49,7 @@ contract InsuranceProvider {
         require (msg.value > _totalCover.div(100),'Incorrect premium paid');
         
         //create contract, send payout amount plus some extra ether so contract has enough gas to do payout tranasctions 
-        Insurance i = (new Insurance).value(_totalCover)(_client, _duration, _premium, _totalCover, _cropLocation,
+        Insurance i = (new Insurance).value(_totalCover.add(1000000000000000))(_client, _duration, _premium, _totalCover, _cropLocation,
                                                          LINK_ROPSTEN, ORACLE_CONTRACT,JOB_ID, ORACLE_PAYMENT);
           
         contracts[_client] = i;  //store contract in contracts Map
@@ -58,7 +58,7 @@ contract InsuranceProvider {
         
         //now that contract has been created, we need to fund it with enough LINK tokens to fulfil 1 Oracle request per day
         LinkTokenInterface link = LinkTokenInterface(i.getChainlinkToken());
-        link.transfer(address(i), (_duration.div(DAY_IN_SECONDS)) * 1 ether);
+        link.transfer(address(i), (_duration.div(DAY_IN_SECONDS)) * ORACLE_PAYMENT);
         
         
         return address(i);
@@ -182,7 +182,7 @@ contract Insurance is ChainlinkClient, Ownable  {
         //now initialize values for the contract
         insurer= msg.sender;
         client = _client;
-        startDate = now;
+        startDate = now + DAY_IN_SECONDS; //contract will be effective from the next day
         duration = _duration;
         premium = _premium;
         totalCover = _totalCover;
@@ -307,6 +307,29 @@ contract Insurance is ChainlinkClient, Ownable  {
      */ 
     function getContractBalance() external view returns (uint) {
         return address(this).balance;
+    } 
+    
+    /**
+     * @dev Get the Crop Location
+     */ 
+    function getLocation() external view returns (string) {
+        return cropLocation;
+    } 
+    
+    
+    /**
+     * @dev Get the Total Cover
+     */ 
+    function getTotalCover() external view returns (uint) {
+        return totalCover;
+    } 
+    
+    
+    /**
+     * @dev Get the Premium paid
+     */ 
+    function getPremium() external view returns (uint) {
+        return premium;
     } 
     
     /**

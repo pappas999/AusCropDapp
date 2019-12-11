@@ -11,6 +11,7 @@
 <header id="menu">
     <a href="#" id="linkHome">Home</a>
     <a href="#" id="linkPurchaseInsurance">Purchase Insurance</a>
+	<a href="#" id="linkPolicy"> View Insurance Policy</a>
 </header>
 
 <main>
@@ -22,12 +23,14 @@
 	
 	
 	<p style="text-align:center;"><h1><center>AusCrop Crop Insurance</center></h1></p>
-	<p style="text-align:center;"><img src="crop.jpg" alt="Logo" width="768" height="432"></p>
+	
 	
     
 	
 	
 	<section id="viewHome">
+	<p style="text-align:center;"><img src="crop.jpg" alt="Logo" width="768" height="432"></p>
+	
         <h1>Crop Insurance</h1>
         Welcome to our Decentralized Crop Insurance offering. Please follow these steps to obtain crop insurance: 
         <ul>
@@ -79,12 +82,29 @@
 		<br/><br/>
         <input type="button" id="submitInsuranceApplication" value="Submit Insurance Application" />
     </section>
+	
+	
+	 <section id="viewPolicy">
+        <h1>Policy Details</h1>
+        <p>Current Metamask wallet Policy Details:</p>
+		
+		<div id="policyDetails" style="display:none"> <!-- change to visible when do calculation -->
+
+		</div>
+		
+		
+
+		
+		
+    </section>
+	
 
 </main>
 
-<footer>Australian Crop Insurance DApp, Kingsland MI5 Advanced Modules Submission</footer>
+<footer>AusCrop Australian Crop Insurance - built by <a href = 'http://www.genesisblockchain.com.au'>Genesis Blockchain Services</a></footer>
 </body>
  <script src="lib/jquery-3.1.1.min.js"></script>
  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
+ <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
  <script src="app.js" type="module"></script>
 </html>
