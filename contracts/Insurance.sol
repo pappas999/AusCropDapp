@@ -108,7 +108,6 @@ contract Insurance is ChainlinkClient, Ownable  {
     
     address public insurer;
     address  client;
-    uint contractStartDate;
     uint startDate;
     uint duration;
     uint premium;
@@ -119,7 +118,7 @@ contract Insurance is ChainlinkClient, Ownable  {
     uint daysWithoutRain;                   //how many days there has been with 0 rain
     bool contractActive;                    //is the contract currently active, or has it ended
     uint currentRainfall = 0;               //what is the current rainfall for the location
-    uint currentRainfallDateChecked = now;  //when the last rainfall check was performed
+    uint currentRainfallDateChecked = now + DAY_IN_SECONDS;  //when the last rainfall check was performed
     uint requestCount = 0;                  //how many requests for rainfall data have been made so far for this insurance contract
     
 
@@ -135,7 +134,7 @@ contract Insurance is ChainlinkClient, Ownable  {
      * @dev Prevents a function being run unless the Insurance Contract duration has been reached
      */
     modifier onContractEnded() {
-        if (contractStartDate + duration < now) {
+        if (startDate + duration < now) {
           _;  
         } 
     }
@@ -189,7 +188,6 @@ contract Insurance is ChainlinkClient, Ownable  {
         daysWithoutRain = 0;
         contractActive = true;
         cropLocation = _cropLocation;
-        contractStartDate = now;
         
         emit contractCreated(insurer,
                              client,

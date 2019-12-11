@@ -1,6 +1,8 @@
-
-
 $(document).ready(function() {
+	
+	setInterval(function() {
+			getPolicy();
+		}, 30000);  //Delay here = 5 seconds 
 
 	
 	if (typeof web3 !== 'undefined') {
@@ -18,740 +20,11 @@ $(document).ready(function() {
 	
 	const DAY_IN_SECONDS = 60;    //How many seconds in a day. 60 for testing, 86400 for Production
 	const ETHER = 1000000000000000000; 
-    const contractFactoryAddress = "0x1E06fFe161362A401dAF601d6A08CDc3278B66d1";
-	const contractFactoryABI = [
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_contract",
-				"type": "address"
-			}
-		],
-		"name": "getContract",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_address",
-				"type": "address"
-			}
-		],
-		"name": "getContractStatus",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "ORACLE_CONTRACT",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getInsurer",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "DAY_IN_SECONDS",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "JOB_ID",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getContractBalance",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [],
-		"name": "endContractProvider",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "LINK_ROPSTEN",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "insurer",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_client",
-				"type": "address"
-			},
-			{
-				"name": "_duration",
-				"type": "uint256"
-			},
-			{
-				"name": "_premium",
-				"type": "uint256"
-			},
-			{
-				"name": "_totalCover",
-				"type": "uint256"
-			},
-			{
-				"name": "_cropLocation",
-				"type": "string"
-			}
-		],
-		"name": "newContract",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "constructor"
-	},
-	{
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "fallback"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_insuranceContract",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_premium",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "_totalCover",
-				"type": "uint256"
-			}
-		],
-		"name": "contractCreated",
-		"type": "event"
-	}
-];
-	const policyABI = [
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getCurrentRainfall",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getChainlinkToken",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [],
-		"name": "checkContract",
-		"outputs": [
-			{
-				"name": "requestId",
-				"type": "bytes32"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getRequestCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getCurrentRainfallDateChecked",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "DAY_IN_SECONDS",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getContractBalance",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getDaysWithoutRain",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getTotalCover",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getDuration",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "DROUGHT_DAYS_THRESDHOLD",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getNow",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getContractStatus",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getPremium",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getLocation",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_requestId",
-				"type": "bytes32"
-			},
-			{
-				"name": "_rainfall",
-				"type": "uint256"
-			}
-		],
-		"name": "checkContractCallBack",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "insurer",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getContractStartDate",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"name": "_client",
-				"type": "address"
-			},
-			{
-				"name": "_duration",
-				"type": "uint256"
-			},
-			{
-				"name": "_premium",
-				"type": "uint256"
-			},
-			{
-				"name": "_totalCover",
-				"type": "uint256"
-			},
-			{
-				"name": "_cropLocation",
-				"type": "string"
-			},
-			{
-				"name": "_link",
-				"type": "address"
-			},
-			{
-				"name": "_oracle",
-				"type": "address"
-			},
-			{
-				"name": "_job_id",
-				"type": "string"
-			},
-			{
-				"name": "_oraclePaymentAmount",
-				"type": "uint256"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "constructor"
-	},
-	{
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "fallback"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_insurer",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_client",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_duration",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "_premium",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "_totalCover",
-				"type": "uint256"
-			}
-		],
-		"name": "contractCreated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_paidTime",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "_totalPaid",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "_finalRainfall",
-				"type": "uint256"
-			}
-		],
-		"name": "contractPaidOut",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_endTime",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "_totalReturned",
-				"type": "uint256"
-			}
-		],
-		"name": "contractEnded",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_rainfall",
-				"type": "uint256"
-			}
-		],
-		"name": "ranfallThresholdReset",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "requestId",
-				"type": "bytes32"
-			}
-		],
-		"name": "dataRequestSent",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_rainfall",
-				"type": "uint256"
-			}
-		],
-		"name": "dataReceived",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "previousOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipRenounced",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "id",
-				"type": "bytes32"
-			}
-		],
-		"name": "ChainlinkRequested",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "id",
-				"type": "bytes32"
-			}
-		],
-		"name": "ChainlinkFulfilled",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "id",
-				"type": "bytes32"
-			}
-		],
-		"name": "ChainlinkCancelled",
-		"type": "event"
-	}
-];
-	//const INSURER_ADDRESS = "0x32a4a9d725AEb0a8b992d2878De92D3a6CC7E3de";
+    const contractFactoryAddress = "0x4e82753DC0e5b5d68cb77340F86fF97f9c1cF242";
 	
-	//const votingContract = new ethers.Contract(votingContractAddress, votingContractABI, ethereumProvider);
+	const contractFactoryABI = [{"constant":true,"inputs":[{"name":"_contract","type":"address"}],"name":"getContract","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getContractStatus","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ORACLE_CONTRACT","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getInsurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DAY_IN_SECONDS","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"JOB_ID","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"endContractProvider","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"LINK_ROPSTEN","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"insurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_client","type":"address"},{"name":"_duration","type":"uint256"},{"name":"_premium","type":"uint256"},{"name":"_totalCover","type":"uint256"},{"name":"_cropLocation","type":"string"}],"name":"newContract","outputs":[{"name":"","type":"address"}],"payable":true,"stateMutability":"payable","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_insuranceContract","type":"address"},{"indexed":false,"name":"_premium","type":"uint256"},{"indexed":false,"name":"_totalCover","type":"uint256"}],"name":"contractCreated","type":"event"}];
+	
+	const policyABI = [{"constant":true,"inputs":[],"name":"getCurrentRainfall","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getChainlinkToken","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"checkContract","outputs":[{"name":"requestId","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getRequestCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getCurrentRainfallDateChecked","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DAY_IN_SECONDS","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getDaysWithoutRain","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getTotalCover","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getDuration","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DROUGHT_DAYS_THRESDHOLD","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getNow","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractStatus","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getPremium","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getLocation","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_requestId","type":"bytes32"},{"name":"_rainfall","type":"uint256"}],"name":"checkContractCallBack","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"insurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractStartDate","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_client","type":"address"},{"name":"_duration","type":"uint256"},{"name":"_premium","type":"uint256"},{"name":"_totalCover","type":"uint256"},{"name":"_cropLocation","type":"string"},{"name":"_link","type":"address"},{"name":"_oracle","type":"address"},{"name":"_job_id","type":"string"},{"name":"_oraclePaymentAmount","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_insurer","type":"address"},{"indexed":false,"name":"_client","type":"address"},{"indexed":false,"name":"_duration","type":"uint256"},{"indexed":false,"name":"_premium","type":"uint256"},{"indexed":false,"name":"_totalCover","type":"uint256"}],"name":"contractCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_paidTime","type":"uint256"},{"indexed":false,"name":"_totalPaid","type":"uint256"},{"indexed":false,"name":"_finalRainfall","type":"uint256"}],"name":"contractPaidOut","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_endTime","type":"uint256"},{"indexed":false,"name":"_totalReturned","type":"uint256"}],"name":"contractEnded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_rainfall","type":"uint256"}],"name":"ranfallThresholdReset","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"requestId","type":"bytes32"}],"name":"dataRequestSent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_rainfall","type":"uint256"}],"name":"dataReceived","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"id","type":"bytes32"}],"name":"ChainlinkRequested","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"id","type":"bytes32"}],"name":"ChainlinkFulfilled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"id","type":"bytes32"}],"name":"ChainlinkCancelled","type":"event"}];
 	const contractFactory = new web3.eth.Contract(contractFactoryABI,contractFactoryAddress);	
 	
 	
@@ -837,78 +110,71 @@ $(document).ready(function() {
 			var divobj = document.getElementById('policyDetails');
 			
 			if (policyAddr == 0) {
-				console.log('No policy found for account: ' + policyAddr);
-				divobj.innerHTML = "Policy Details not found for Address: <b>" + policyAddr + "</b>";
+				console.log('No policy found for account: ' + policyHolder);
+				divobj.innerHTML = "Policy Details not found for Address: <b>" + policyHolder + "</b>";
 				
 			} else {
+					console.log('getting details');
 					//we have a policy, get details
 					let policy = new web3.eth.Contract(policyABI,policyAddr);
 					
 					let cropLocation = await policy.methods.getLocation().call();
+					console.log(cropLocation);
+					
+					console.log('getting totalCover');
 					let totalCover = await policy.methods.getTotalCover().call();
+					console.log(totalCover);
+					
 					let premium = await policy.methods.getPremium().call();
+					console.log(premium);
 					
 					let contractStatus = await policy.methods.getContractStatus().call();
+					console.log(contractStatus);
+					
 					let currentRain = await policy.methods.getCurrentRainfall().call();
+					console.log(currentRain);
+					
 					let daysWithoutRain = await policy.methods.getDaysWithoutRain().call();
+					console.log(daysWithoutRain);
+					
 					let requestCount = await policy.methods.getRequestCount().call();
+					console.log(requestCount);
+					
 					let lastTimeRainChecked = await policy.methods.getCurrentRainfallDateChecked().call();
+					console.log(lastTimeRainChecked);
+					
 					let duration = await policy.methods.getDuration().call();
-					let startDate = await policy.methods.getContractStartDate().call();
+					console.log(duration);
 					
+					let startDateSecs = await policy.methods.getContractStartDate().call();
+					console.log(startDateSecs);
 					
-					
+					//convert dates
+					var startDate = new Date(startDateSecs*1000).toISOString();
+					var endDate = new Date(startDateSecs * 1000 + duration * 1000).toISOString();
+					var dateLastChecked = new Date(lastTimeRainChecked*1000).toISOString();
+
 					//set div output
 					divobj.innerHTML = "<form action=&quot;&quot;>" + 
 										"Location: <input type=&quot;text&quot; name=&quot;location&quot; value=&quot;" + cropLocation  + "&quot; readonly><br>" + 
-										"Total Cover in AUD: <input type=&quot;text&quot; name=&quot;cover&quot; value=&quot;" + totalCover  + "&quot; readonly><br>" + 
-										"Premium: <input type=&quot;text&quot; name=&quot;premium&quot; value=&quot;" + premium  + "&quot; readonly><br>" + 
+										"Total Cover in ETH: <input type=&quot;text&quot; name=&quot;cover&quot; value=&quot;" + totalCover / ETHER  + "&quot; readonly><br>" + 
+										"Premium in ETH: <input type=&quot;text&quot; name=&quot;premium&quot; value=&quot;" + premium / ETHER + "&quot; readonly><br>" + 
 										"Start Date: <input type=&quot;text&quot; name=&quot;startDate&quot; value=&quot;" + startDate  + "&quot; readonly><br>" + 
-										"End Date: <input type=&quot;text&quot; name=&quot;endDate&quot; value=&quot;" + duration  + "&quot; readonly><br>" + 
+										"End Date: <input type=&quot;text&quot; name=&quot;endDate&quot; value=&quot;" + endDate  + "&quot; readonly><br>" + 
 										"Contract Currently Active?: <input type=&quot;text&quot; name=&quot;status&quot; value=&quot;" + contractStatus  + "&quot; readonly><br>" + 
 										"Current no of days without precipitation: <input type=&quot;text&quot; name=&quot;daysWithoutRain&quot; value=&quot;" + daysWithoutRain  + "&quot; readonly><br>" + 
-										"Current precipitation: <input type=&quot;text&quot; name=&quot;currentRainfall&quot; value=&quot;" + currentRain  + "&quot; readonly><br>" + 
+										"Current precipitation in mm: <input type=&quot;text&quot; name=&quot;currentRainfall&quot; value=&quot;" + currentRain  + "&quot; readonly><br>" + 
 										"Number of Data requests completed: <input type=&quot;text&quot; name=&quot;requestCount&quot; value=&quot;" + requestCount  + "&quot; readonly><br>" + 
-										"Last time precipitation was checked: <input type=&quot;text&quot; name=&quot;lastTimeChecked&quot; value=&quot;" + lastTimeRainChecked  + "&quot; readonly><br>" +
+										"Last time precipitation was checked: <input type=&quot;text&quot; name=&quot;lastTimeChecked&quot; value=&quot;" + dateLastChecked  + "&quot; readonly><br>" +
 										"</form>";
 		
 				
 			}
 			document.getElementById('policyDetails').style.display= 'block' ;
-			
-			
-			
-			
 		});
-	
-		//gets policy details for the current Metamask wallet
-		
-		//contract location
-		
-		//contract cover
-		
-		//contract premium
-		
-		//contract start date
-		
-		//contract end date
-		
-		//contract current days without rain
-		
-		//contract current rainfall
-		
-		//contract request count
-		
-
-		/*
-		var premium = document.getElementById("totalCover").value * .01;
-		if (premium < 0.000001) return showError("Incorrect Premium, please adjust the Total Cover");
-		//now update premium field on screen
-		var divobj = document.getElementById('calculatedPremium');
-		divobj.innerHTML = "Calculated Premium in ETH: <b>" + premium + "</b>";
-		document.getElementById('calculatedPremium').style.display= 'block' ;
-		*/
 	}
+	
+
 	
 
 	function calculatePremium() {
@@ -920,6 +186,7 @@ $(document).ready(function() {
 		divobj.innerHTML = "Calculated Premium in ETH: <b>" + premium + "</b>";
 		document.getElementById('calculatedPremium').style.display= 'block' ;
 	}
+	
 
     
 	async function createInsuranceContract() {
@@ -1008,20 +275,7 @@ $(document).ready(function() {
 																		console.log('job spec creation complete')
 																	})
 																	.on('error', console.error);
-
-																	/*var myEvent = contractFactory.events.contractCreated({}, {fromBlock: 0, toBlock: 'latest'});
-																		myEvent.watch(function(error, result){
-																			    var contractAddress = result.events.contractCreated.returnValues['_insuranceContract']
-																				console.log('generated address is: ' +  contractAddress);
-																	});*/
-
-
-																	
-
 																});			
-		
-		});
-					
+		});		
 	}
-
 });
