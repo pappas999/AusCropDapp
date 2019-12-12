@@ -15,12 +15,12 @@ $(document).ready(function() {
 		window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 	}
   
-	const schedulingNode = 'http://35.244.76.127:6688';
-	const schedulingNodeCred = '{"email":"auscrop@auscrop.com", "password":"chainlink"}';
+	const schedulingNode = 'http://35.244.76.127:8080'; 
+
 	
 	const DAY_IN_SECONDS = 60;    //How many seconds in a day. 60 for testing, 86400 for Production
 	const ETHER = 1000000000000000000; 
-    const contractFactoryAddress = "0xeD42f6F1237CCb22fE8E26087594cF91da6f37Ff";
+    const contractFactoryAddress = "0x539221F74e47d37d002B5bCeC97f83f0328bb8A9";
 	
 	const contractFactoryABI = [{"constant":true,"inputs":[{"name":"_contract","type":"address"}],"name":"getContract","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getContractStatus","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ORACLE_CONTRACT","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getInsurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DAY_IN_SECONDS","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"JOB_ID","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"endContractProvider","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"LINK_ROPSTEN","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"insurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_client","type":"address"},{"name":"_duration","type":"uint256"},{"name":"_premium","type":"uint256"},{"name":"_totalCover","type":"uint256"},{"name":"_cropLocation","type":"string"}],"name":"newContract","outputs":[{"name":"","type":"address"}],"payable":true,"stateMutability":"payable","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_insuranceContract","type":"address"},{"indexed":false,"name":"_premium","type":"uint256"},{"indexed":false,"name":"_totalCover","type":"uint256"}],"name":"contractCreated","type":"event"}];
 	
@@ -30,7 +30,6 @@ $(document).ready(function() {
 	
 	$('#linkHome').click(function () {
 		showView("viewHome")
-		//temp();
 	});
 	$('#linkPurchaseInsurance').click(function () {
 		showView("purchaseInsurance")
@@ -54,64 +53,6 @@ $(document).ready(function() {
 			$("#loadingBox").hide()
 		}
 	});
-	
-	async function temp() {
-		    const BASE_URL = 'http://35.244.76.127:6688';
-			const axiosInstance = axios.create({ baseURL: BASE_URL});
-			console.log("create session");
-			const authParams = {
-				username: "auscrop@auscrop.com",
-				password: "chainlink"
-			};
-			//const resp = await axios.post(BASE_URL + '/sessions', schedulingNodeCred);
-			//const [cookie] = resp.headers["set-cookie"]; // get cookie from request
-			//axiosInstance.defaults.headers.Cookie = cookie; // attach cookie to axiosInstance for future requests
-			//return cookie; // return Promise<cookie> cause func is async
-			//};
-			//console.log('cookie set: ' + cookie);
-			
-			/*
-			const api = axios.create({
-				baseURL: BASE_URL,
-				headers: {"content-type": "application/json"},
-				xsrfCookieName: "XSRF-TOKEN",
-				xsrfHeaderName: "X-XSRF-TOKEN"
-				//withCredentials: true
-			});
-			
-			const resp = await api.post(BASE_URL + '/sessions', schedulingNodeCred, {headers: {"Content-Type": "application/json"}});
-			console.log('connect response: ' + JSON.stringify(resp));
-			
-			//console.log('cookies :' + JSON.stringify(Cookies.get()));
-			const resp2 = await api.post(schedulingNode + '/v2/specs', '{"initiators":[{"type":"cron","params":{"schedule":"0/60 * * * * *"}}],"tasks":[{"type":"ethtx","confirmations":0,"params":{"address":"0x1DBD8AF2C614655fDb052f817E12e67f3886DC9C","functionSelector":"checkContract()"}}],"startAt": "2019-12-11T23:19:45+10:30","endAt": "2019-12-11T23:24:45+10:30"}', {headers: {"Content-Type": "application/json"}});
-			*/
-//const rp = import ('request-promise');
-  const cookie = rp.jar();
-  var r1 = await rp({
-    uri: BASE_URL + '/sessions',
-    jar: cookie,
-    method: 'POST',
-    json: {
-      'email': chainlink.email,
-      'password': chainlink.password
-    }
-  });
-  console.log('r1: ' + r1);
-  console.log('cookie: ' + cookie);
-  //return cookie
-
-
-
-  var r2 = await rp({
-    uri: BASE_URL + '/v2/specs',
-    method: 'POST',
-    jar: cookie,
-    json: {"initiators":[{"type":"cron","params":{"schedule":"0/60 * * * * *"}}],"tasks":[{"type":"ethtx","confirmations":0,"params":{"address":"0x1DBD8AF2C614655fDb052f817E12e67f3886DC9C","functionSelector":"checkContract()"}}],"startAt": "2019-12-11T23:19:45+10:30","endAt": "2019-12-11T23:24:45+10:30"}
-  });
-  console.log('r2: ' + r2);
-
-
-	}
 
 	function showView(viewName) {
 		// Hide all views and show the selected view only
@@ -213,7 +154,8 @@ $(document).ready(function() {
 					var dateLastChecked = new Date(lastTimeRainChecked*1000).toISOString();
 
 					//set div output
-					divobj.innerHTML = "<form action=&quot;&quot;>" + 
+					divobj.innerHTML = "Policy: <b><a href = 'https://ropsten.etherscan.io/address/" + policyAddr + "'>" + policyAddr + "</a></b><BR>" +
+										"<form action=&quot;&quot;>" + 
 										"Location: <input type=&quot;text&quot; name=&quot;location&quot; value=&quot;" + cropLocation  + "&quot; readonly><br>" + 
 										"Total Cover in ETH: <input type=&quot;text&quot; name=&quot;cover&quot; value=&quot;" + totalCover / ETHER  + "&quot; readonly><br>" + 
 										"Premium in ETH: <input type=&quot;text&quot; name=&quot;premium&quot; value=&quot;" + premium / ETHER + "&quot; readonly><br>" + 
@@ -280,7 +222,7 @@ $(document).ready(function() {
 			//now that we have validated the fields, we can call the ContractFactory newContract function, which will generate a new instance of the Insurance Smart Contract, passig in all values required
 			//to generate a new fully funded insurance contract
 			//parameters required: function newContract(address payable _client, uint _duration, uint _premium, uint _totalCover, uint _cropLocation)
-			try { await axios.post(schedulingNode + '/sessions', schedulingNodeCred); } catch(error) {console.log('connect error: ' + error);}
+			var eventCaptured = false;
 			
 			console.log('calling contract factory');
 			//let contractFactory = new web3.eth.Contract(contractFactoryABI,contractFactoryAddress);
@@ -312,22 +254,28 @@ $(document).ready(function() {
 																		var jobStartDate = new Date();
 																		var jobStartDateStr = jobStartDate.toIsoString();
 																		var jobEndDate = jobStartDate;
-																		jobEndDate.setSeconds( jobEndDate.getSeconds() + document.getElementById("duration").value * DAY_IN_SECONDS);
+																		jobEndDate.setSeconds( jobEndDate.getSeconds() + (DAY_IN_SECONDS * 2) + document.getElementById("duration").value * DAY_IN_SECONDS);
 																		var jobEndDateStr = jobEndDate.toIsoString();
 																		console.log('startDate: ' + jobStartDateStr);
 																		console.log('EndDate: ' + jobEndDateStr);
 																		
 																		//now that we have all parameters, we can build up the job spec string
-																		var jobSpec = '{"initiators":[{"type":"cron","params":{"schedule":"0/' + DAY_IN_SECONDS + ' * * * * *"}}],"tasks":[{"type":"ethtx","confirmations":0,"params":{"address":"' + contractAddress + '","functionSelector":"checkContract()"}}],"startAt": "' + jobStartDateStr + '","endAt": "' + jobEndDateStr + '"}';
-																		console.log('generated job spec: ' + jobSpec);
-																		
+																		var jobSpec = '{"address":"' + contractAddress + '",' +
+																						'"startAt": "' + jobStartDateStr + '",' +
+																						'"endAt": "' + jobEndDateStr + '"}';
+ 
+
+																		console.log('jobspec is: ' + jobSpec);
 																		//now that we have the jobspec, we do a POST to the Chainlink Scheduling node to authenticate the request, then another to send the request
 																		
 																		//authentication with scheduling node
 																		//try { await axios.post(schedulingNode + '/sessions', schedulingNodeCred); } catch(error) {console.log('connect error: ' + error);}
-																		console.log('trying to push jobspec');
-																		//posting the new jobSpec
-																		try { await axios.post(schedulingNode + '/v2/specs', jobSpec, {headers: {"Content-Type": "application/json"}}); } catch(error) {console.log('job spec create error: ' + error);}
+																		if (!(eventCaptured)) {
+																			console.log('trying to push jobspec');
+																			//posting the new jobSpec
+																			try { await axios.post(schedulingNode + '/schedule', jobSpec, {headers: {"Content-Type": "application/json"}}); } catch(error) {console.log('job spec create error: ' + error);}
+																			eventCaptured = true;
+																		}
 																		
 																		
 																		console.log('job spec creation complete')

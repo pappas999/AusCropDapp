@@ -63,7 +63,7 @@ contract InsuranceProvider {
         
         //now that contract has been created, we need to fund it with enough LINK tokens to fulfil 1 Oracle request per day
         LinkTokenInterface link = LinkTokenInterface(i.getChainlinkToken());
-        link.transfer(address(i), (_duration.div(DAY_IN_SECONDS)) * ORACLE_PAYMENT);
+        link.transfer(address(i), ((_duration.div(DAY_IN_SECONDS)) + 2) * ORACLE_PAYMENT);
         
         
         return address(i);
