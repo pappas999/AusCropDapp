@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	
 	setInterval(function() {
-			getPolicy();
+			//getPolicy();
 		}, 30000);  //Delay here = 5 seconds 
 
 	
@@ -20,16 +20,17 @@ $(document).ready(function() {
 	
 	const DAY_IN_SECONDS = 60;    //How many seconds in a day. 60 for testing, 86400 for Production
 	const ETHER = 1000000000000000000; 
-    const contractFactoryAddress = "0x4e82753DC0e5b5d68cb77340F86fF97f9c1cF242";
+    const contractFactoryAddress = "0xeD42f6F1237CCb22fE8E26087594cF91da6f37Ff";
 	
 	const contractFactoryABI = [{"constant":true,"inputs":[{"name":"_contract","type":"address"}],"name":"getContract","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getContractStatus","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ORACLE_CONTRACT","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getInsurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DAY_IN_SECONDS","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"JOB_ID","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"endContractProvider","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"LINK_ROPSTEN","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"insurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_client","type":"address"},{"name":"_duration","type":"uint256"},{"name":"_premium","type":"uint256"},{"name":"_totalCover","type":"uint256"},{"name":"_cropLocation","type":"string"}],"name":"newContract","outputs":[{"name":"","type":"address"}],"payable":true,"stateMutability":"payable","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_insuranceContract","type":"address"},{"indexed":false,"name":"_premium","type":"uint256"},{"indexed":false,"name":"_totalCover","type":"uint256"}],"name":"contractCreated","type":"event"}];
 	
-	const policyABI = [{"constant":true,"inputs":[],"name":"getCurrentRainfall","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getChainlinkToken","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"checkContract","outputs":[{"name":"requestId","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getRequestCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getCurrentRainfallDateChecked","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DAY_IN_SECONDS","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getDaysWithoutRain","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getTotalCover","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getDuration","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DROUGHT_DAYS_THRESDHOLD","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getNow","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractStatus","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getPremium","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getLocation","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_requestId","type":"bytes32"},{"name":"_rainfall","type":"uint256"}],"name":"checkContractCallBack","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"insurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractStartDate","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_client","type":"address"},{"name":"_duration","type":"uint256"},{"name":"_premium","type":"uint256"},{"name":"_totalCover","type":"uint256"},{"name":"_cropLocation","type":"string"},{"name":"_link","type":"address"},{"name":"_oracle","type":"address"},{"name":"_job_id","type":"string"},{"name":"_oraclePaymentAmount","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_insurer","type":"address"},{"indexed":false,"name":"_client","type":"address"},{"indexed":false,"name":"_duration","type":"uint256"},{"indexed":false,"name":"_premium","type":"uint256"},{"indexed":false,"name":"_totalCover","type":"uint256"}],"name":"contractCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_paidTime","type":"uint256"},{"indexed":false,"name":"_totalPaid","type":"uint256"},{"indexed":false,"name":"_finalRainfall","type":"uint256"}],"name":"contractPaidOut","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_endTime","type":"uint256"},{"indexed":false,"name":"_totalReturned","type":"uint256"}],"name":"contractEnded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_rainfall","type":"uint256"}],"name":"ranfallThresholdReset","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"requestId","type":"bytes32"}],"name":"dataRequestSent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_rainfall","type":"uint256"}],"name":"dataReceived","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"id","type":"bytes32"}],"name":"ChainlinkRequested","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"id","type":"bytes32"}],"name":"ChainlinkFulfilled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"id","type":"bytes32"}],"name":"ChainlinkCancelled","type":"event"}];
+	const policyABI = [{"constant":true,"inputs":[],"name":"getCurrentRainfall","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getChainlinkToken","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"checkContract","outputs":[{"name":"requestId","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getRequestCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getCurrentRainfallDateChecked","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DAY_IN_SECONDS","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getDaysWithoutRain","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getTotalCover","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getDuration","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractPaid","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DROUGHT_DAYS_THRESDHOLD","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getNow","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractStatus","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getPremium","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getLocation","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_requestId","type":"bytes32"},{"name":"_rainfall","type":"uint256"}],"name":"checkContractCallBack","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"insurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractStartDate","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_client","type":"address"},{"name":"_duration","type":"uint256"},{"name":"_premium","type":"uint256"},{"name":"_totalCover","type":"uint256"},{"name":"_cropLocation","type":"string"},{"name":"_link","type":"address"},{"name":"_oracle","type":"address"},{"name":"_job_id","type":"string"},{"name":"_oraclePaymentAmount","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_insurer","type":"address"},{"indexed":false,"name":"_client","type":"address"},{"indexed":false,"name":"_duration","type":"uint256"},{"indexed":false,"name":"_premium","type":"uint256"},{"indexed":false,"name":"_totalCover","type":"uint256"}],"name":"contractCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_paidTime","type":"uint256"},{"indexed":false,"name":"_totalPaid","type":"uint256"},{"indexed":false,"name":"_finalRainfall","type":"uint256"}],"name":"contractPaidOut","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_endTime","type":"uint256"},{"indexed":false,"name":"_totalReturned","type":"uint256"}],"name":"contractEnded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_rainfall","type":"uint256"}],"name":"ranfallThresholdReset","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"requestId","type":"bytes32"}],"name":"dataRequestSent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_rainfall","type":"uint256"}],"name":"dataReceived","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"id","type":"bytes32"}],"name":"ChainlinkRequested","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"id","type":"bytes32"}],"name":"ChainlinkFulfilled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"id","type":"bytes32"}],"name":"ChainlinkCancelled","type":"event"}];
 	const contractFactory = new web3.eth.Contract(contractFactoryABI,contractFactoryAddress);	
 	
 	
 	$('#linkHome').click(function () {
 		showView("viewHome")
+		temp();
 	});
 	$('#linkPurchaseInsurance').click(function () {
 		showView("purchaseInsurance")
@@ -53,6 +54,64 @@ $(document).ready(function() {
 			$("#loadingBox").hide()
 		}
 	});
+	
+	async function temp() {
+		    const BASE_URL = 'http://35.244.76.127:6688';
+			const axiosInstance = axios.create({ baseURL: BASE_URL});
+			console.log("create session");
+			const authParams = {
+				username: "auscrop@auscrop.com",
+				password: "chainlink"
+			};
+			//const resp = await axios.post(BASE_URL + '/sessions', schedulingNodeCred);
+			//const [cookie] = resp.headers["set-cookie"]; // get cookie from request
+			//axiosInstance.defaults.headers.Cookie = cookie; // attach cookie to axiosInstance for future requests
+			//return cookie; // return Promise<cookie> cause func is async
+			//};
+			//console.log('cookie set: ' + cookie);
+			
+			/*
+			const api = axios.create({
+				baseURL: BASE_URL,
+				headers: {"content-type": "application/json"},
+				xsrfCookieName: "XSRF-TOKEN",
+				xsrfHeaderName: "X-XSRF-TOKEN"
+				//withCredentials: true
+			});
+			
+			const resp = await api.post(BASE_URL + '/sessions', schedulingNodeCred, {headers: {"Content-Type": "application/json"}});
+			console.log('connect response: ' + JSON.stringify(resp));
+			
+			//console.log('cookies :' + JSON.stringify(Cookies.get()));
+			const resp2 = await api.post(schedulingNode + '/v2/specs', '{"initiators":[{"type":"cron","params":{"schedule":"0/60 * * * * *"}}],"tasks":[{"type":"ethtx","confirmations":0,"params":{"address":"0x1DBD8AF2C614655fDb052f817E12e67f3886DC9C","functionSelector":"checkContract()"}}],"startAt": "2019-12-11T23:19:45+10:30","endAt": "2019-12-11T23:24:45+10:30"}', {headers: {"Content-Type": "application/json"}});
+			*/
+const rp = import ('request-promise');
+  const cookie = rp.jar()
+  var r1 = await rp({
+    uri: BASE_URL + '/sessions',
+    jar: cookie,
+    method: 'POST',
+    json: {
+      'email': chainlink.email,
+      'password': chainlink.password
+    }
+  });
+  console.log('r1: ' + r1);
+  console.log('cookie: ' + cookie);
+  //return cookie
+
+
+
+  var r2 = await rp({
+    uri: BASE_URL + '/v2/specs',
+    method: 'POST',
+    jar: cookie,
+    json: {"initiators":[{"type":"cron","params":{"schedule":"0/60 * * * * *"}}],"tasks":[{"type":"ethtx","confirmations":0,"params":{"address":"0x1DBD8AF2C614655fDb052f817E12e67f3886DC9C","functionSelector":"checkContract()"}}],"startAt": "2019-12-11T23:19:45+10:30","endAt": "2019-12-11T23:24:45+10:30"}
+  });
+  console.log('r2: ' + r2);
+
+
+	}
 
 	function showView(viewName) {
 		// Hide all views and show the selected view only
@@ -121,7 +180,6 @@ $(document).ready(function() {
 					let cropLocation = await policy.methods.getLocation().call();
 					console.log(cropLocation);
 					
-					console.log('getting totalCover');
 					let totalCover = await policy.methods.getTotalCover().call();
 					console.log(totalCover);
 					
@@ -266,8 +324,8 @@ $(document).ready(function() {
 																		//now that we have the jobspec, we do a POST to the Chainlink Scheduling node to authenticate the request, then another to send the request
 																		
 																		//authentication with scheduling node
-																		try { await axios.post(schedulingNode + '/sessions', schedulingNodeCred); } catch(error) {console.log('connect error: ' + error);}
-																		
+																		//try { await axios.post(schedulingNode + '/sessions', schedulingNodeCred); } catch(error) {console.log('connect error: ' + error);}
+																		console.log('trying to push jobspec');
 																		//posting the new jobSpec
 																		try { await axios.post(schedulingNode + '/v2/specs', jobSpec, {headers: {"Content-Type": "application/json"}}); } catch(error) {console.log('job spec create error: ' + error);}
 																		

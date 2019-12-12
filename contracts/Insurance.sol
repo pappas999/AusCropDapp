@@ -117,6 +117,7 @@ contract Insurance is ChainlinkClient, Ownable  {
 
     uint daysWithoutRain;                   //how many days there has been with 0 rain
     bool contractActive;                    //is the contract currently active, or has it ended
+    bool contractPaid = false;
     uint currentRainfall = 0;               //what is the current rainfall for the location
     uint currentRainfallDateChecked = now + DAY_IN_SECONDS;  //when the last rainfall check was performed
     uint requestCount = 0;                  //how many requests for rainfall data have been made so far for this insurance contract
@@ -273,6 +274,7 @@ contract Insurance is ChainlinkClient, Ownable  {
         //now that amount has been transferred, can end the contract 
         //mark contract as ended, so no future calls can be done
         contractActive = false;
+        contractPaid = true;
     
     }  
     
@@ -336,6 +338,14 @@ contract Insurance is ChainlinkClient, Ownable  {
     function getContractStatus() external view returns (bool) {
         return contractActive;
     }
+    
+    /**
+     * @dev Get whether the contract has been paid out or not
+     */ 
+    function getContractPaid() external view returns (bool) {
+        return contractPaid;
+    }
+    
     
     /**
      * @dev Get the current recorded rainfall for the contract
