@@ -1,8 +1,8 @@
 $(document).ready(function() {
 	
 	setInterval(function() {
-			//getPolicy();
-		}, 30000);  //Delay here = 5 seconds 
+			getPolicy();
+		}, 30000); 
 
 	
 	if (typeof web3 !== 'undefined') {
@@ -30,7 +30,7 @@ $(document).ready(function() {
 	
 	$('#linkHome').click(function () {
 		showView("viewHome")
-		temp();
+		//temp();
 	});
 	$('#linkPurchaseInsurance').click(function () {
 		showView("purchaseInsurance")
@@ -85,8 +85,8 @@ $(document).ready(function() {
 			//console.log('cookies :' + JSON.stringify(Cookies.get()));
 			const resp2 = await api.post(schedulingNode + '/v2/specs', '{"initiators":[{"type":"cron","params":{"schedule":"0/60 * * * * *"}}],"tasks":[{"type":"ethtx","confirmations":0,"params":{"address":"0x1DBD8AF2C614655fDb052f817E12e67f3886DC9C","functionSelector":"checkContract()"}}],"startAt": "2019-12-11T23:19:45+10:30","endAt": "2019-12-11T23:24:45+10:30"}', {headers: {"Content-Type": "application/json"}});
 			*/
-const rp = import ('request-promise');
-  const cookie = rp.jar()
+//const rp = import ('request-promise');
+  const cookie = rp.jar();
   var r1 = await rp({
     uri: BASE_URL + '/sessions',
     jar: cookie,
@@ -178,34 +178,34 @@ const rp = import ('request-promise');
 					let policy = new web3.eth.Contract(policyABI,policyAddr);
 					
 					let cropLocation = await policy.methods.getLocation().call();
-					console.log(cropLocation);
+					//console.log(cropLocation);
 					
 					let totalCover = await policy.methods.getTotalCover().call();
-					console.log(totalCover);
+					//console.log(totalCover);
 					
 					let premium = await policy.methods.getPremium().call();
-					console.log(premium);
+					//console.log(premium);
 					
 					let contractStatus = await policy.methods.getContractStatus().call();
-					console.log(contractStatus);
+					//console.log(contractStatus);
 					
 					let currentRain = await policy.methods.getCurrentRainfall().call();
-					console.log(currentRain);
+					//console.log(currentRain);
 					
 					let daysWithoutRain = await policy.methods.getDaysWithoutRain().call();
-					console.log(daysWithoutRain);
+					//console.log(daysWithoutRain);
 					
 					let requestCount = await policy.methods.getRequestCount().call();
-					console.log(requestCount);
+					//console.log(requestCount);
 					
 					let lastTimeRainChecked = await policy.methods.getCurrentRainfallDateChecked().call();
-					console.log(lastTimeRainChecked);
+					//console.log(lastTimeRainChecked);
 					
 					let duration = await policy.methods.getDuration().call();
-					console.log(duration);
+					//console.log(duration);
 					
 					let startDateSecs = await policy.methods.getContractStartDate().call();
-					console.log(startDateSecs);
+					//console.log(startDateSecs);
 					
 					//convert dates
 					var startDate = new Date(startDateSecs*1000).toISOString();

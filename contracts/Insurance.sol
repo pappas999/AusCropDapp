@@ -3,14 +3,14 @@ pragma experimental ABIEncoderV2;
 
 
 //Truffle Imports
-import "chainlink/contracts/ChainlinkClient.sol";
-import "chainlink/contracts/vendor/Ownable.sol";
-import "chainlink/contracts/interfaces/LinkTokenInterface.sol";
+//import "chainlink/contracts/ChainlinkClient.sol";
+//import "chainlink/contracts/vendor/Ownable.sol";
+//import "chainlink/contracts/interfaces/LinkTokenInterface.sol";
 
 //Remix imports - used when testing in remix 
-//import "https://github.com/smartcontractkit/chainlink/evm/contracts/ChainlinkClient.sol";
-//import "https://github.com/smartcontractkit/chainlink/evm/contracts/vendor/Ownable.sol";
-//import "https://github.com/smartcontractkit/LinkToken/contracts/LinkToken.sol";
+import "https://github.com/smartcontractkit/chainlink/evm/contracts/ChainlinkClient.sol";
+import "https://github.com/smartcontractkit/chainlink/evm/contracts/vendor/Ownable.sol";
+import "https://github.com/smartcontractkit/LinkToken/contracts/LinkToken.sol";
 
 
 contract InsuranceProvider {
