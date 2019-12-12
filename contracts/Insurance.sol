@@ -3,14 +3,14 @@ pragma experimental ABIEncoderV2;
 
 
 //Truffle Imports
-import "chainlink/contracts/ChainlinkClient.sol";
-import "chainlink/contracts/vendor/Ownable.sol";
-import "chainlink/contracts/interfaces/LinkTokenInterface.sol";
+//import "chainlink/contracts/ChainlinkClient.sol";
+//import "chainlink/contracts/vendor/Ownable.sol";
+//import "chainlink/contracts/interfaces/LinkTokenInterface.sol";
 
 //Remix imports - used when testing in remix 
-//import "https://github.com/smartcontractkit/chainlink/evm/contracts/ChainlinkClient.sol";
-//import "https://github.com/smartcontractkit/chainlink/evm/contracts/vendor/Ownable.sol";
-//import "https://github.com/smartcontractkit/LinkToken/contracts/LinkToken.sol";
+import "https://github.com/smartcontractkit/chainlink/evm/contracts/ChainlinkClient.sol";
+import "https://github.com/smartcontractkit/chainlink/evm/contracts/vendor/Ownable.sol";
+import "https://github.com/smartcontractkit/LinkToken/contracts/LinkToken.sol";
 
 
 contract InsuranceProvider {
@@ -34,15 +34,20 @@ contract InsuranceProvider {
         
     }
 
-    
+    /**
+     * @dev Prevents a function being run unless it's called by Insurance Provider
+     */
     modifier onlyOwner() {
 		require(insurer == msg.sender,'Only Insurance provider can do this');
         _;
     }
     
+    
     event contractCreated(address _insuranceContract, uint _premium, uint _totalCover);
     
-    //create a new contract for client, automatically approved and deployed to the blockchain
+    /**
+     * @dev Create a new contract for client, automatically approved and deployed to the blockchain
+     */ 
     function newContract(address _client, uint _duration, uint _premium, uint _totalCover, string _cropLocation) public payable returns(address) {
         
         //to do extra validation to ensure preimium paid matches with total _totalCover
@@ -65,32 +70,48 @@ contract InsuranceProvider {
         
     }
     
-    //view functions used for viewing contract status on the frontend
+
+    /**
+     * @dev returns the contract for a given client address
+     */
     function getContract(address _contract) external view returns (Insurance) {
         return contracts[_contract];
     }
     
+    /**
+     * @dev Get the insurer address for this insurance provider
+     */
     function getInsurer() external view returns (address) {
         return insurer;
     }
     
+    /**
+     * @dev Get the status of a given Contract
+     */
     function getContractStatus(address _address) external view returns (bool) {
         Insurance i = Insurance(_address);
         return i.getContractStatus();
     }
     
+    /**
+     * @dev Create a new contract for client, automatically approved and deployed to the blockchain
+     */
     function getContractBalance() external view returns (uint) {
         return address(this).balance;
     }
     
-    //function to end provider contract, in case of bugs or needing to update logic etc, funds are returned to insurance provider, including any remaining LINK tokens
+    /**
+     * @dev Function to end provider contract, in case of bugs or needing to update logic etc, funds are returned to insurance provider, including any remaining LINK tokens
+     */
     function endContractProvider() external payable onlyOwner() {
         LinkTokenInterface link = LinkTokenInterface(LINK_ROPSTEN);
         require(link.transfer(msg.sender, link.balanceOf(address(this))), "Unable to transfer");
         selfdestruct(insurer);
     }
     
-    //fallback function, to receive ether
+    /**
+     * @dev fallback function, to receive ether
+     */
     function() external payable {  }
 
 }
@@ -165,7 +186,6 @@ contract Insurance is ChainlinkClient, Ownable  {
 
     /**
      * @dev Creates a new Insurance contract
-     * @param _client The client address that is purchasing the insurance contract
      */ 
     constructor(address _client, uint _duration, uint _premium, uint _totalCover, string _cropLocation, 
                 address _link, address _oracle, string _job_id, uint256 _oraclePaymentAmount)  payable Ownable() public {
