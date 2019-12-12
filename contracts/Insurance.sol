@@ -244,7 +244,6 @@ contract Insurance is ChainlinkClient, Ownable  {
             //sends the request to the Oracle Contract which will emit an event that the Oracle Node will pick up and action
             requestId = sendChainlinkRequestTo(chainlinkOracleAddress(), req, oraclePaymentAmount); 
             
-            requestCount +=1;
             emit dataRequestSent(requestId);
         }
     }
@@ -258,6 +257,7 @@ contract Insurance is ChainlinkClient, Ownable  {
         //set current temperature to value returned from Oracle, and store date this was retrieved (to avoid spam and gaming the contract)
         currentRainfall = _rainfall;
         currentRainfallDateChecked = now;
+        requestCount +=1;
         emit dataReceived(_rainfall);
         
         //check if payout conditions have been met, if so call payoutcontract, which should also end/kill contract at the end

@@ -20,7 +20,7 @@ $(document).ready(function() {
 	
 	const DAY_IN_SECONDS = 60;    //How many seconds in a day. 60 for testing, 86400 for Production
 	const ETHER = 1000000000000000000; 
-    const contractFactoryAddress = "0x539221F74e47d37d002B5bCeC97f83f0328bb8A9";
+    const contractFactoryAddress = "0x88fA9aD18910ce61412AF3041D263F471F843E19";
 	
 	const contractFactoryABI = [{"constant":true,"inputs":[{"name":"_contract","type":"address"}],"name":"getContract","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getContractStatus","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ORACLE_CONTRACT","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getInsurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"DAY_IN_SECONDS","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"JOB_ID","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getContractBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"endContractProvider","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"LINK_ROPSTEN","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"insurer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_client","type":"address"},{"name":"_duration","type":"uint256"},{"name":"_premium","type":"uint256"},{"name":"_totalCover","type":"uint256"},{"name":"_cropLocation","type":"string"}],"name":"newContract","outputs":[{"name":"","type":"address"}],"payable":true,"stateMutability":"payable","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_insuranceContract","type":"address"},{"indexed":false,"name":"_premium","type":"uint256"},{"indexed":false,"name":"_totalCover","type":"uint256"}],"name":"contractCreated","type":"event"}];
 	
@@ -147,6 +147,15 @@ $(document).ready(function() {
 					
 					let startDateSecs = await policy.methods.getContractStartDate().call();
 					//console.log(startDateSecs);
+					var st;
+					let contractPaid = await policy.methods.getContractPaid().call();
+					if (contractStatus == true)
+						st = 'Active';
+					else if (contractStatus == false && contractPaid == true)
+						st = 'Paid';
+					else 
+						st = 'Expired';
+					
 					
 					//convert dates
 					var startDate = new Date(startDateSecs*1000).toISOString();
@@ -156,16 +165,16 @@ $(document).ready(function() {
 					//set div output
 					divobj.innerHTML = "Policy: <b><a href = 'https://ropsten.etherscan.io/address/" + policyAddr + "'>" + policyAddr + "</a></b><BR>" +
 										"<form action=&quot;&quot;>" + 
-										"Location: <input type=&quot;text&quot; name=&quot;location&quot; value=&quot;" + cropLocation  + "&quot; readonly><br>" + 
-										"Total Cover in ETH: <input type=&quot;text&quot; name=&quot;cover&quot; value=&quot;" + totalCover / ETHER  + "&quot; readonly><br>" + 
-										"Premium in ETH: <input type=&quot;text&quot; name=&quot;premium&quot; value=&quot;" + premium / ETHER + "&quot; readonly><br>" + 
-										"Start Date: <input type=&quot;text&quot; name=&quot;startDate&quot; value=&quot;" + startDate  + "&quot; readonly><br>" + 
-										"End Date: <input type=&quot;text&quot; name=&quot;endDate&quot; value=&quot;" + endDate  + "&quot; readonly><br>" + 
-										"Contract Currently Active?: <input type=&quot;text&quot; name=&quot;status&quot; value=&quot;" + contractStatus  + "&quot; readonly><br>" + 
-										"Current no of days without precipitation: <input type=&quot;text&quot; name=&quot;daysWithoutRain&quot; value=&quot;" + daysWithoutRain  + "&quot; readonly><br>" + 
-										"Current precipitation in mm: <input type=&quot;text&quot; name=&quot;currentRainfall&quot; value=&quot;" + currentRain  + "&quot; readonly><br>" + 
-										"Number of Data requests completed: <input type=&quot;text&quot; name=&quot;requestCount&quot; value=&quot;" + requestCount  + "&quot; readonly><br>" + 
-										"Last time precipitation was checked: <input type=&quot;text&quot; name=&quot;lastTimeChecked&quot; value=&quot;" + dateLastChecked  + "&quot; readonly><br>" +
+										"Location: <input type=&quot;text&quot; name=&quot;location&quot; value=" + cropLocation  + " readonly><br>" + 
+										"Total Cover in ETH: <input type=&quot;text&quot; name=&quot;cover&quot; value=" + totalCover / ETHER  + " readonly><br>" + 
+										"Premium in ETH: <input type=&quot;text&quot; name=&quot;premium&quot; value=" + premium / ETHER + " readonly><br>" + 
+										"Start Date: <input type=&quot;text&quot; name=&quot;startDate&quot; value=" + startDate  + " readonly><br>" + 
+										"End Date: <input type=&quot;text&quot; name=&quot;endDate&quot; value=" + endDate  + " readonly><br>" + 
+										"Contract Currently Active?: <input type=&quot;text&quot; name=&quot;status&quot; value=" + st  + " readonly><br>" + 
+										"Current no of days without precipitation: <input type=&quot;text&quot; name=&quot;daysWithoutRain&quot; value=" + daysWithoutRain  + " readonly><br>" + 
+										"Current precipitation in mm: <input type=&quot;text&quot; name=&quot;currentRainfall&quot; value=" + currentRain  + " readonly><br>" + 
+										"Number of Data requests completed: <input type=&quot;text&quot; name=&quot;requestCount&quot; value=" + requestCount  + " readonly><br>" + 
+										"Last time precipitation was checked: <input type=&quot;text&quot; name=&quot;lastTimeChecked&quot; value=" + dateLastChecked  + " readonly><br>" +
 										"</form>";
 		
 				
